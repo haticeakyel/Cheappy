@@ -35,3 +35,32 @@ func (a *Api) HandleAddProduct(c *fiber.Ctx) error {
 	}
 	return nil
 }
+
+func (a *Api) HandleGetProducts(c *fiber.Ctx) error {
+
+	products, err := a.Service.GetProducts()
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to fetch products",
+		})
+	}
+
+	return c.JSON(products)
+}
+
+func (a *Api) HandleGetProduct(c *fiber.Ctx) error {
+	ID := c.Params("id")
+
+	product, err := a.Service.GetProduct(ID)
+
+	switch err {
+	case nil:
+		c.JSON(product)
+		c.Status(fiber.StatusOK)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return nil
+}

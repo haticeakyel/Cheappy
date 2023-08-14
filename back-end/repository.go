@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -15,20 +16,24 @@ type Repository struct {
 	client *mongo.Client
 }
 
-func NewRepository() *Repository {
-	uri := "mongodb+srv://haticeakyel:cheappytest@cluster0.tn9d3bu.mongodb.net/"
-	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+func NewRepository() (*Repository, error) {
+    uri := "mongodb+srv://haticeakyel:cheappytest@cluster0.tn9d3bu.mongodb.net/"
+    client, err := mongo.NewClient(options.Client().ApplyURI(uri))
+    if err != nil {
+        return nil, err
+    }
 
-	defer cancel()
-	client.Connect(ctx)
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
 
-	if err != nil {
-		log.Fatal(err)
-	}
+    err = client.Connect(ctx)
+    if err != nil {
+        return nil, err
+    }
 
-	return &Repository{client}
+    return &Repository{client}, nil
 }
+
 
 func (repository *Repository) GetProduct(ID string) (*model.Product, error) {
 	collection := repository.client.Database("product").Collection("product")
@@ -46,18 +51,47 @@ func (repository *Repository) GetProduct(ID string) (*model.Product, error) {
 }
 
 func (repository Repository) CreateProduct(productData model.Product) (*model.Product, error) {
+    collection := repository.client.Database("product").Collection("products")
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+    defer cancel()
+
+    _, err := collection.InsertOne(ctx, productData)
+    if err != nil {
+        return nil, fmt.Errorf("failed to insert product: %w", err)
+    }
+
+    // Return the newly created product data directly
+    return &productData, nil
+}
+
+
+func (repository Repository) GetProducts() ([]model.Product, error) {
 	collection := repository.client.Database("product").Collection("products")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := collection.InsertOne(ctx, productData)
+	options := options.Find()
+	options.SetSort(bson.M{"_id": -1})
+
+	cur, err := collection.Find(ctx, options)
 	if err != nil {
 		return nil, err
 	}
 
-	product, err := repository.GetProduct(productData.ID)
+	entities := []model.Product{}
+
+	for cur.Next(ctx) {
+
+		entity := model.Product{}
+		err := cur.Decode(&entity)
+		if err != nil {
+			log.Fatal(err)
+		}
+		entities = append(entities, entity)
+	}
+
 	if err != nil {
 		return nil, err
 	}
-	return product, nil
+	return entities, nil
 }

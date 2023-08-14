@@ -1,12 +1,19 @@
 package main
 
 import (
+	"context"
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
-	repository := NewRepository()
+	repository, err := NewRepository()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer repository.client.Disconnect(context.Background())
 	service := NewService(repository)
 	api := NewApi(&service)
 	app := SetupApp(api)
@@ -20,7 +27,13 @@ func SetupApp(api *Api) *fiber.App {
 		AllowCredentials: true,
 	}))
 
+	//products
 	app.Post("/addProduct", api.HandleAddProduct)
+	app.Get("/products", api.HandleGetProducts)
+	app.Get("/products/:id", api.HandleGetProduct)
+
+	//brands
+	
 
 	return app
 }

@@ -31,16 +31,16 @@ func GenerateUUID(length int) string {
 	return uuid[0:length]
 }
 
-func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, error) { // Use models.ProductDTO and models.Product
-	productCreate := model.Product{ // Use models.Product
+func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, error) { 
+	productCreate := model.Product{ 
 		ID:          GenerateUUID(8),
 		Name:        productDTO.Name,
 		Description: productDTO.Description,
 		Stock:       5,
 		BrandID:     productDTO.BrandID,
-		WebsitePrices: []model.WebsitePrice{ // Use models.WebsitePrice
-			{WebsiteID: "trendyol", Price: 199.99, Stock: 50},
-			{WebsiteID: "hepsiburada", Price: 219.99, Stock: 30},
+		WebsitePrices: []model.WebsitePrice{
+			{WebsiteID: GenerateUUID(8), Price: 199.99, Stock: 50},
+			{WebsiteID: GenerateUUID(8), Price: 219.99, Stock: 30},
 		},
 	}
 
@@ -50,4 +50,25 @@ func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, er
 	}
 
 	return productCreated, nil
+}
+
+func (s *Service) GetProducts() ([]model.Product, error) {
+	productList, err := s.Repository.GetProducts()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return productList, nil
+}
+
+func (s *Service) GetProduct( ID string) (*model.Product, error) {
+
+	gotProduct, err := s.Repository.GetProduct( ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return gotProduct, nil
 }
