@@ -33,7 +33,14 @@ func SetupApp(api *Api) *fiber.App {
 	app.Get("/products/:id", api.HandleGetProduct)
 
 	//brands
-	
+	app.Post("/addBrand", api.HandleAddBrand)
+	app.Get("/brands", api.HandleGetBrands)
+	app.Get("/brands/:id", api.HandleGetBrand)
+
+	//websites
+	app.Post("/addWebsite", api.HandleAddWebsite)
+	app.Get("/websites", api.HandleGetWebsites)
+	app.Get("/websites/:id", api.HandleGetWebsite)
 
 	return app
 }

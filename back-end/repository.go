@@ -17,26 +17,25 @@ type Repository struct {
 }
 
 func NewRepository() (*Repository, error) {
-    uri := "mongodb+srv://haticeakyel:cheappytest@cluster0.tn9d3bu.mongodb.net/"
-    client, err := mongo.NewClient(options.Client().ApplyURI(uri))
-    if err != nil {
-        return nil, err
-    }
+	uri := "mongodb+srv://haticeakyel:cheappytest@cluster0.tn9d3bu.mongodb.net/"
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
+	if err != nil {
+		return nil, err
+	}
 
-    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-    defer cancel()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-    err = client.Connect(ctx)
-    if err != nil {
-        return nil, err
-    }
+	err = client.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
 
-    return &Repository{client}, nil
+	return &Repository{client}, nil
 }
 
-
 func (repository *Repository) GetProduct(ID string) (*model.Product, error) {
-	collection := repository.client.Database("product").Collection("product")
+	collection := repository.client.Database("product").Collection("products")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -51,47 +50,148 @@ func (repository *Repository) GetProduct(ID string) (*model.Product, error) {
 }
 
 func (repository Repository) CreateProduct(productData model.Product) (*model.Product, error) {
-    collection := repository.client.Database("product").Collection("products")
-    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-    defer cancel()
+	collection := repository.client.Database("product").Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-    _, err := collection.InsertOne(ctx, productData)
-    if err != nil {
-        return nil, fmt.Errorf("failed to insert product: %w", err)
-    }
+	_, err := collection.InsertOne(ctx, productData)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert product: %w", err)
+	}
 
-    // Return the newly created product data directly
-    return &productData, nil
+	return &productData, nil
 }
-
 
 func (repository Repository) GetProducts() ([]model.Product, error) {
 	collection := repository.client.Database("product").Collection("products")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	options := options.Find()
-	options.SetSort(bson.M{"_id": -1})
+	cur, err := collection.Find(ctx, bson.M{})
 
-	cur, err := collection.Find(ctx, options)
 	if err != nil {
 		return nil, err
 	}
 
-	entities := []model.Product{}
-
+	products := []model.Product{}
 	for cur.Next(ctx) {
-
-		entity := model.Product{}
-		err := cur.Decode(&entity)
+		var product model.Product
+		err := cur.Decode(&product)
 		if err != nil {
 			log.Fatal(err)
 		}
-		entities = append(entities, entity)
+
+		products = append(products, product)
+
 	}
+
+	return products, nil
+}
+
+func (repository Repository) CreateBrand(brandData model.Brand) (*model.Brand, error) {
+	collection := repository.client.Database("product").Collection("brands")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := collection.InsertOne(ctx, brandData)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert brand: %w", err)
+	}
+
+	return &brandData, nil
+}
+
+func (repository Repository) GetBrands() ([]model.Brand, error) {
+	collection := repository.client.Database("product").Collection("brands")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	cur, err := collection.Find(ctx, bson.M{})
 
 	if err != nil {
 		return nil, err
 	}
-	return entities, nil
+
+	brands := []model.Brand{}
+	for cur.Next(ctx) {
+		var brand model.Brand
+		err := cur.Decode(&brand)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		brands = append(brands, brand)
+
+	}
+
+	return brands, nil
+}
+
+func (repository *Repository) GetBrand(ID string) (*model.Brand, error) {
+	collection := repository.client.Database("product").Collection("brands")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	entity := &model.Brand{}
+	filters := bson.M{"id": ID}
+	err := collection.FindOne(ctx, filters).Decode(entity)
+	if err != nil {
+		return nil, err
+	}
+
+	return entity, nil
+}
+
+func (repository Repository) CreateWebsite(webData model.Website) (*model.Website, error) {
+	collection := repository.client.Database("product").Collection("websites")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := collection.InsertOne(ctx, webData)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert website: %w", err)
+	}
+
+	return &webData, nil
+}
+
+func (repository Repository) GetWebsites() ([]model.Website, error) {
+	collection := repository.client.Database("product").Collection("websites")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	cur, err := collection.Find(ctx, bson.M{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	webs := []model.Website{}
+	for cur.Next(ctx) {
+		var web model.Website
+		err := cur.Decode(&web)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		webs = append(webs, web)
+
+	}
+
+	return webs, nil
+}
+
+func (repository *Repository) GetWebsite(ID string) (*model.Website, error) {
+	collection := repository.client.Database("product").Collection("websites")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	entity := &model.Website{}
+	filters := bson.M{"id": ID}
+	err := collection.FindOne(ctx, filters).Decode(entity)
+	if err != nil {
+		return nil, err
+	}
+
+	return entity, nil
 }

@@ -24,10 +24,10 @@ func (a *Api) HandleAddProduct(c *fiber.Ctx) error {
 		return err
 	}
 
-	eventCreate, err := a.Service.CreateProduct(productDTO)
+	productCreate, err := a.Service.CreateProduct(productDTO)
 	switch err {
 	case nil:
-		c.JSON(eventCreate)
+		c.JSON(productCreate)
 		c.Status(fiber.StatusCreated)
 	default:
 		c.Status(fiber.StatusInternalServerError)
@@ -40,23 +40,126 @@ func (a *Api) HandleGetProducts(c *fiber.Ctx) error {
 
 	products, err := a.Service.GetProducts()
 
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to fetch products",
-		})
+	switch err {
+	case nil:
+		c.JSON(products)
+		c.Status(fiber.StatusOK)
+	default:
+		c.Status(fiber.StatusInternalServerError)
 	}
-
-	return c.JSON(products)
+	return nil
 }
 
 func (a *Api) HandleGetProduct(c *fiber.Ctx) error {
 	ID := c.Params("id")
 
 	product, err := a.Service.GetProduct(ID)
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError)
+		return err
+	}
+
+	c.JSON(product)
+	c.Status(fiber.StatusOK)
+
+	return nil
+}
+
+func (a *Api) HandleAddBrand(c *fiber.Ctx) error {
+
+	brandDTO := model.BrandDTO{}
+	err := c.BodyParser(&brandDTO)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return err
+	}
+
+	brandCreate, err := a.Service.CreateBrand(brandDTO)
+	switch err {
+	case nil:
+		c.JSON(brandCreate)
+		c.Status(fiber.StatusCreated)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+		c.JSON(fiber.Map{"error": err.Error()})
+	}
+	return nil
+}
+
+func (a *Api) HandleGetBrands(c *fiber.Ctx) error {
+
+	brands, err := a.Service.GetBrands()
 
 	switch err {
 	case nil:
-		c.JSON(product)
+		c.JSON(brands)
+		c.Status(fiber.StatusOK)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return c.JSON(brands)
+}
+
+func (a *Api) HandleGetBrand(c *fiber.Ctx) error {
+	ID := c.Params("id")
+
+	brand, err := a.Service.GetBrand(ID)
+
+	switch err {
+	case nil:
+		c.JSON(brand)
+		c.Status(fiber.StatusOK)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return nil
+}
+
+func (a *Api) HandleAddWebsite(c *fiber.Ctx) error {
+
+	websiteDTO := model.WebsiteDTO{}
+	err := c.BodyParser(&websiteDTO)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return err
+	}
+
+	websiteCreate, err := a.Service.CreateWebsite(websiteDTO)
+	switch err {
+	case nil:
+		c.JSON(websiteCreate)
+		c.Status(fiber.StatusCreated)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+		c.JSON(fiber.Map{"error": err.Error()})
+	}
+	return nil
+}
+
+func (a *Api) HandleGetWebsites(c *fiber.Ctx) error {
+
+	websites, err := a.Service.GetWebsites()
+
+	switch err {
+	case nil:
+		c.JSON(websites)
+		c.Status(fiber.StatusOK)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+	return nil
+}
+
+func (a *Api) HandleGetWebsite(c *fiber.Ctx) error {
+	ID := c.Params("id")
+
+	website, err := a.Service.GetWebsite(ID)
+
+	switch err {
+	case nil:
+		c.JSON(website)
 		c.Status(fiber.StatusOK)
 	default:
 		c.Status(fiber.StatusInternalServerError)
