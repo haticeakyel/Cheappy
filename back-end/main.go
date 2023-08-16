@@ -42,5 +42,8 @@ func SetupApp(api *Api) *fiber.App {
 	app.Get("/websites", api.HandleGetWebsites)
 	app.Get("/websites/:id", api.HandleGetWebsite)
 
+	//search
+	//app.Get("/search",api.SearchProduct())
+
 	return app
 }
