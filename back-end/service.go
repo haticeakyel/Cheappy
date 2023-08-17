@@ -36,7 +36,6 @@ func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, er
 		ID:          GenerateUUID(8),
 		Name:        productDTO.Name,
 		Description: productDTO.Description,
-		Stock:       5,
 		BrandID:     productDTO.BrandID,
 		WebsitePrices: []model.WebsitePrice{
 			{WebsiteID: GenerateUUID(8), Price: 199.99, Stock: 50},

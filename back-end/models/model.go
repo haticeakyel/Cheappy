@@ -14,7 +14,6 @@ type WebsiteDTO struct {
 type Product struct {
 	ID            string         `json:"id" bson:"id"`
 	Name          string         `json:"name" bson:"name"`
-	Stock         int            `json:"stock" bson:"stock"`
 	Description   string         `json:"description" bson:"description"`
 	BrandID       string         `json:"brandId" bson:"brandId"`
 	WebsitePrices []WebsitePrice `json:"websitePrices" bson:"websitePrices"`
@@ -22,7 +21,6 @@ type Product struct {
 
 type ProductDTO struct {
 	Name          string         `json:"name" bson:"name"`
-	Stock         int            `json:"stock" bson:"stock"`
 	Description   string         `json:"description" bson:"description"`
 	BrandID       string         `json:"brandId" bson:"brandId"`
 	WebsitePrices []WebsitePrice `json:"websitePrices" bson:"websitePrices"`
