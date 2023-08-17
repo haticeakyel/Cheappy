@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AddProduct from '../views/AddProduct.vue'
+import AddBrand from '../views/AddBrand.vue'
+import ContractedBrands from '../views/ContractedBrands.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +17,16 @@ const routes = [
     path: '/addProduct',
     name: 'addProduct',
     component:  AddProduct
+  },
+  {
+    path: '/addBrand',
+    name: 'addBrand',
+    component:  AddBrand
+  },
+  {
+    path: '/brands',
+    name: 'contractedBrands',
+    component:  ContractedBrands
   }
 ]
 

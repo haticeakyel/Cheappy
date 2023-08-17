@@ -39,7 +39,7 @@
       class="mr-4"
       @click="submit"
     >
-      submit
+      Add Product
     </v-btn>
     <v-btn @click="clear">
       clear

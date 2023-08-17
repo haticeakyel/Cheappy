@@ -97,6 +97,7 @@
       drawer: null,
       items: [
         { title: 'Home', icon: 'mdi-home account', to: '/' },
+        { title: 'Contracted Brands', icon: 'mdi-handshake-outline', to: '/brands' },
         { title: 'Add New Product', icon: 'mdi-plus', to: '/addProduct' },
         { title: 'Add New Brand', icon: 'mdi-plus', to: '/addBrand' },
       ],
