@@ -12,7 +12,8 @@ export default new Vuex.Store({
   state: {
     products: [],
     brands: [],
-    websites: []
+    websites: [],
+    categories:[],
   },
   getters: {
     products: state => {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     },
     websites: state =>{
       return state.websites;
+    },
+    categories: state =>{
+      return state.categories;
     }
   },
   mutations: {
@@ -32,8 +36,11 @@ export default new Vuex.Store({
     GET_BRANDS(state, brands){
       state.brands = brands;
     },
-    GET_WEBSITES(state,webssites){
-      state.websites = webssites;
+    GET_WEBSITES(state,websites){
+      state.websites = websites;
+    },
+    GET_CATEGORIES(state, categories){
+      state.categories = categories;
     }
   },
   actions: {
@@ -59,6 +66,14 @@ export default new Vuex.Store({
       try {
         const response = await api.get('/websites');
         commit('GET_WEBSITES', response.data)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async listCategories({commit}){
+      try {
+        const response = await api.get('/categories');
+        commit('GET_CATEGORIES', response.data)
       } catch (error) {
         console.log(error)
       }

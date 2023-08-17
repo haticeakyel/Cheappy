@@ -42,6 +42,11 @@ func SetupApp(api *Api) *fiber.App {
 	app.Get("/websites", api.HandleGetWebsites)
 	app.Get("/websites/:id", api.HandleGetWebsite)
 
+	//categories
+	app.Post("/addCategory", api.HandleAddCategory)
+	app.Get("/categories", api.HandleGetCategories)
+	app.Get("/categories/:id", api.HandleGetCategory)
+
 	//search
 	//app.Get("/search",api.SearchProduct())
 

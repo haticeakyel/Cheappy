@@ -167,3 +167,55 @@ func (a *Api) HandleGetWebsite(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func (a *Api) HandleAddCategory(c *fiber.Ctx) error {
+
+	categoryDTO := model.CategoryDTO{}
+	err := c.BodyParser(&categoryDTO)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return err
+	}
+
+	categoryCreate, err := a.Service.CreateCategory(categoryDTO)
+	switch err {
+	case nil:
+		c.JSON(categoryCreate)
+		c.Status(fiber.StatusCreated)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+		c.JSON(fiber.Map{"error": err.Error()})
+	}
+	return nil
+}
+
+func (a *Api) HandleGetCategories(c *fiber.Ctx) error {
+
+	categories, err := a.Service.GetCategories()
+
+	switch err {
+	case nil:
+		c.JSON(categories)
+		c.Status(fiber.StatusOK)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return c.JSON(categories)
+}
+
+func (a *Api) HandleGetCategory(c *fiber.Ctx) error {
+	ID := c.Params("id")
+
+	category, err := a.Service.GetCategory(ID)
+
+	switch err {
+	case nil:
+		c.JSON(category)
+		c.Status(fiber.StatusOK)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return nil
+}

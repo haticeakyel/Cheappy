@@ -1,15 +1,17 @@
 <template>
   <form class="pa-8">
     <h2>Add New Product</h2>
-    <v-text-field
-      v-model="name"
-      :error-messages="nameErrors"
-      :counter="10"
-      label="Name"
-      required
-      @input="$v.name.$touch()"
-      @blur="$v.name.$touch()"
-    ></v-text-field>
+    <v-select
+        v-model="selectC"
+        :items="categories"
+        item-text="name"
+        item-value="category"
+        :error-messages="selectCErrors"
+        label="Category"
+        required
+        @change="$v.selectC.$touch()"
+        @blur="$v.selectC.$touch()"
+      ></v-select>
     <v-text-field
       v-model="description"
       label="Description"
@@ -55,9 +57,9 @@
     mixins: [validationMixin],
 
     validations: {
-      name: { required, maxLength: maxLength(10) },
       description: { required },
       select: { required },
+      selectC: { required },
       
     },
 
@@ -65,6 +67,7 @@
       name: '',
       description: '',
       select: null,
+      selectC:null,
     }),
 
     computed: {
@@ -74,11 +77,10 @@
         !this.$v.select.required && errors.push("Please select brand, if doesn't exist please add")
         return errors
       },
-      nameErrors () {
+      selectCErrors () {
         const errors = []
-        if (!this.$v.name.$dirty) return errors
-        !this.$v.name.maxLength && errors.push('Name must be at most 10 characters long')
-        !this.$v.name.required && errors.push('Name is required.')
+        if (!this.$v.selectC.$dirty) return errors
+        !this.$v.selectC.required && errors.push("Please select category")
         return errors
       },
       brands() {
@@ -87,9 +89,16 @@
         brand:brand
       }));
     },
+    categories() {
+      return this.$store.getters.categories.map(category => ({
+        name: category.name,
+        category:category
+      }));
+    },
     },
       created() {
     this.$store.dispatch('listBrands');
+    this.$store.dispatch('listCategories');
   },
     methods: {
       submit () {

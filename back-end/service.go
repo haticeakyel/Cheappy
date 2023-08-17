@@ -37,6 +37,7 @@ func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, er
 		Name:        productDTO.Name,
 		Description: productDTO.Description,
 		BrandID:     productDTO.BrandID,
+		CategoryID:  productDTO.CategoryID,
 		WebsitePrices: []model.WebsitePrice{
 			{WebsiteID: GenerateUUID(8), Price: 199.99, Stock: 50},
 			{WebsiteID: GenerateUUID(8), Price: 219.99, Stock: 30},
@@ -141,4 +142,39 @@ func (s *Service) GetWebsite(ID string) (*model.Website, error) {
 	}
 
 	return gotWeb, nil
+}
+
+func (s *Service) CreateCategory(categoryDTO model.CategoryDTO) (*model.Category, error) {
+	categoryCreate := model.Category{
+		ID:   GenerateUUID(8),
+		Name: categoryDTO.Name,
+	}
+
+	categoryCreated, err := s.Repository.CreateCategory(categoryCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	return categoryCreated, nil
+}
+
+func (s *Service) GetCategories() ([]model.Category, error) {
+	categoryList, err := s.Repository.GetCategories()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return categoryList, nil
+}
+
+func (s *Service) GetCategory(ID string) (*model.Category, error) {
+
+	gotCategory, err := s.Repository.GetCategory(ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return gotCategory, nil
 }

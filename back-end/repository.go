@@ -195,3 +195,57 @@ func (repository *Repository) GetWebsite(ID string) (*model.Website, error) {
 
 	return entity, nil
 }
+
+func (repository Repository) CreateCategory(categoryData model.Category) (*model.Category, error) {
+	collection := repository.client.Database("product").Collection("categories")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := collection.InsertOne(ctx, categoryData)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert category: %w", err)
+	}
+
+	return &categoryData, nil
+}
+
+func (repository Repository) GetCategories() ([]model.Category, error) {
+	collection := repository.client.Database("product").Collection("categories")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	cur, err := collection.Find(ctx, bson.M{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	categories := []model.Category{}
+	for cur.Next(ctx) {
+		var category model.Category
+		err := cur.Decode(&category)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		categories = append(categories, category)
+
+	}
+
+	return categories, nil
+}
+
+func (repository *Repository) GetCategory(ID string) (*model.Category, error) {
+	collection := repository.client.Database("product").Collection("categories")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	entity := &model.Category{}
+	filters := bson.M{"id": ID}
+	err := collection.FindOne(ctx, filters).Decode(entity)
+	if err != nil {
+		return nil, err
+	}
+
+	return entity, nil
+}

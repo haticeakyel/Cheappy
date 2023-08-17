@@ -16,6 +16,7 @@ type Product struct {
 	Name          string         `json:"name" bson:"name"`
 	Description   string         `json:"description" bson:"description"`
 	BrandID       string         `json:"brandId" bson:"brandId"`
+	CategoryID    string         `json:"categoryId" bson:"categoryId"`
 	WebsitePrices []WebsitePrice `json:"websitePrices" bson:"websitePrices"`
 }
 
@@ -23,6 +24,7 @@ type ProductDTO struct {
 	Name          string         `json:"name" bson:"name"`
 	Description   string         `json:"description" bson:"description"`
 	BrandID       string         `json:"brandId" bson:"brandId"`
+	CategoryID    string         `json:"categoryId" bson:"categoryId"`
 	WebsitePrices []WebsitePrice `json:"websitePrices" bson:"websitePrices"`
 }
 
@@ -43,5 +45,14 @@ type Brand struct {
 }
 
 type BrandDTO struct {
+	Name string `json:"name" bson:"name"`
+}
+
+type Category struct {
+	ID   string `json:"id" bson:"id"`
+	Name string `json:"name" bson:"name"`
+}
+
+type CategoryDTO struct {
 	Name string `json:"name" bson:"name"`
 }
