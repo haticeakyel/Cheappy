@@ -62,7 +62,6 @@
       <v-row>
         <v-col cols="12">
           <v-text-field
-            v-model="message"
             filled
             clear-icon="mdi-close-circle"
             clearable

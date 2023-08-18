@@ -41,6 +41,15 @@ export default new Vuex.Store({
     },
     GET_CATEGORIES(state, categories){
       state.categories = categories;
+    },
+    ADD_BRAND(state,newBrand){
+      state.brands.push(newBrand)
+    },
+    ADD_WEBSITE(state,websites){
+      state.websites = websites;
+    },
+    ADD_PRODUCT(state,products){
+      state.products = products;
     }
   },
   actions: {
@@ -77,7 +86,17 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error)
       }
-    }
+    },
+    async addBrand({ commit }, brandData) {
+      try {
+        const response = await api.post('/addBrand', brandData);
+        commit('ADD_BRAND', response.data);
+      } catch (error) {
+        console.error('Error adding brand:', error);
+        throw error;
+      }
+    },
   },
+
   modules: {},
 });
