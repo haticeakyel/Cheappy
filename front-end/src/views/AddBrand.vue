@@ -15,7 +15,7 @@
       Add Brand
     </v-btn>
     <v-btn @click="clear">Clear</v-btn>
-    <v-alert class="ma-10" type="success" text="Brand added successfully"  v-model="brandAdded">Brand added successfully</v-alert>
+    <v-alert class="ma-10" type="success"  v-model="brandAdded">Brand added successfully</v-alert>
   </form>
 </template>
 

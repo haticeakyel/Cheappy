@@ -48,8 +48,8 @@ export default new Vuex.Store({
     ADD_WEBSITE(state,websites){
       state.websites = websites;
     },
-    ADD_PRODUCT(state,products){
-      state.products = products;
+    ADD_PRODUCT(state,newProduct){
+      state.products.push(newProduct);
     }
   },
   actions: {
@@ -93,6 +93,15 @@ export default new Vuex.Store({
         commit('ADD_BRAND', response.data);
       } catch (error) {
         console.error('Error adding brand:', error);
+        throw error;
+      }
+    },
+    async addProduct({commit}, productData){
+      try {
+        const response = await api.post('/addProduct',productData)
+        commit('ADD_PRODUCT', response.data);
+      } catch (error) {
+        console.error('Error adding product:', error);
         throw error;
       }
     },

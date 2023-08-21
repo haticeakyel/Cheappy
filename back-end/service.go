@@ -39,8 +39,8 @@ func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, er
 		BrandID:     productDTO.BrandID,
 		CategoryID:  productDTO.CategoryID,
 		WebsitePrices: []model.WebsitePrice{
-			{WebsiteID: GenerateUUID(8), Price: 199.99, Stock: 50},
-			{WebsiteID: GenerateUUID(8), Price: 219.99, Stock: 30},
+			{WebsiteID: GenerateUUID(8), Price: productDTO.WebsitePrices[0].Price, Stock: productDTO.WebsitePrices[0].Stock},
+			{WebsiteID: GenerateUUID(8), Price: productDTO.WebsitePrices[1].Price, Stock: productDTO.WebsitePrices[1].Stock},
 		},
 	}
 

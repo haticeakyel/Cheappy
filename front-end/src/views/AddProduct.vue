@@ -2,15 +2,15 @@
   <form class="pa-8">
     <h2>Add New Product</h2>
     <v-select
-        v-model="selectC"
-        :items="categories"
-        item-text="name"
-        :error-messages="selectCErrors"
-        label="Category"
-        required
-        @change="$v.selectC.$touch()"
-        @blur="$v.selectC.$touch()"
-      ></v-select>
+      v-model="selectedCategoryId"
+      :items="categories"
+      item-text="name"
+      item-value="category.id"
+      label="Category"
+      @change="$v.selectedCategoryId.$touch()"
+      @blur="$v.selectedCategoryId.$touch()"
+      required
+></v-select>
       <v-text-field
       v-model="name"
       label="Name"
@@ -31,7 +31,6 @@
         v-model="select"
         :items="brands"
         item-text="name"
-        :error-messages="selectErrors"
         label="Brand"
         required
         @change="$v.select.$touch()"
@@ -46,7 +45,6 @@
       v-model="selectW"
       :items="websites"
       item-text="name"
-      :error-messages="selectWErrors"
       label="Website"
       required
     ></v-select>
@@ -75,7 +73,15 @@
     <v-btn @click="clear">
       clear
     </v-btn>
-  </form>
+    <v-alert
+      class="ma-10"
+      type="success"
+      v-model="productAdded"
+      transition="scale-transition"
+      dismissible
+     >
+  Product added successfully
+</v-alert> </form>
 </template>
 
 <script>
@@ -87,40 +93,26 @@ export default {
 
   validations: {
     description: { required },
-    select: { required },
-    selectC: { required },
+    name: { required},
+    select:{required},
+    selectedCategoryId: { required },
     selectW: { required },
   },
 
-  data: () => ({
+  data () {
+    return {
     name: '',
     description: '',
     price: 0,
     stock: 0,
     select: null,
-    selectC: null,
     selectW: null,
-  }),
+    productAdded: false, 
+    selectedCategoryId: null,
+    };
+  },
 
   computed: {
-    selectErrors () {
-      const errors = []
-      if (!this.$v.select.$dirty) return errors
-      !this.$v.select.required && errors.push("Please select brand, if doesn't exist please add")
-      return errors
-    },
-    selectCErrors () {
-      const errors = []
-      if (!this.$v.selectC.$dirty) return errors
-      !this.$v.selectC.required && errors.push("Please select category")
-      return errors
-    },
-    selectWErrors() {
-      const errors = [];
-      if (!this.$v.selectW.$dirty) return errors;
-      !this.$v.selectW.required && errors.push("Please select a website");
-      return errors;
-    },
     brands() {
       return this.$store.getters.brands.map(brand => ({
         name: brand.name,
@@ -148,8 +140,37 @@ export default {
   },
 
   methods: {
+    async addNewProduct() {
+      try {
+        const productData = { 
+          name: this.name,
+          categoryId: this.selectedCategoryId, 
+        };
+        await this.$store.dispatch('addProduct', productData);
+        this.productAdded = true; 
+        setTimeout(() => {
+          this.productAdded = false;
+        }, 3000);
+      } catch (error) {
+        console.error('Error adding product:', error);
+      }
+    },
+
     submit() {
       this.$v.$touch()
+      if (!this.$v.$invalid) {
+        this.addNewProduct();
+        this.name = '';
+        this.price = 0;
+        this.stock = 0;
+        this.description = '';
+        this.select = null;
+        this.selectC = null;
+        this.selectW = null;
+      }
+      else {
+        console.log('olmadı :()')
+      }
     },
     clear() {
       this.$v.$reset()
