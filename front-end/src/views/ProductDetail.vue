@@ -1,29 +1,53 @@
 <template>
-    <div>
-      <h2>{{ product.name }}</h2>
-      <p>Category: {{ getCategoryName(product.categoryId) }}</p>
-    </div>
-  </template>
-  
-  <script>
-  import { mapActions } from 'vuex';
-  
-  export default {
-    props: ['productId'],
-    computed: {
-      product() {
-        return this.$store.state.products.find(prod => prod.id === this.productId);
-      },
+  <v-container>
+    <h2>{{ product.name }}</h2>
+    <p>Category: {{ getCategoryName(product.categoryId) }}</p>
+    <p>{{product.description}} </p>
+    <p>Brand: {{ getBrand(product.brandId) }}</p>
+    <h3>Website Prices:</h3>
+    <ul>
+      <li v-for="(websitePrice, index) in product.websitePrices" :key="index">
+        Website: {{ getWebsiteName(websitePrice.websiteId) }}
+        Price: {{ websitePrice.price }}
+        Stock: {{ websitePrice.stock }}
+      </li>
+    </ul>
+  </v-container>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+
+export default {
+  computed: {
+    product() {
+      return this.$store.state.products.find(
+        prod => prod.id === this.$route.params.productId
+      );
     },
-    methods: {
-      getCategoryName(categoryId) {
-        // Implement this method similar to your ProductItem component
-      },
-      methods: {
-      ...mapActions(['listProducts']),
+  },
+  methods: {
+    getCategoryName(categoryId) {
+      const category = this.$store.state.categories.find(cat => cat.id === categoryId);
+      return category ? category.name : 'Unknown';
     },
-      // ... other methods
+    getBrand(brandId) {
+      const brand = this.$store.state.brands.find(brand => brand.id === brandId);
+      return brand ? brand.name : 'Unknown';
     },
-  };
-  </script>
-  
+    getWebsiteName() {
+      return websiteId => {
+        const website = this.$store.state.websites.find(web => web.id === websiteId);
+        return website ? website.url : 'Unknown';
+      };
+    },
+    ...mapActions(['listProducts', 'listCategories','listBrands','listWebsites']),
+  },
+  created() {
+    this.listBrands();
+    this.listProducts();
+    this.listCategories();
+    this.listWebsites();
+  },
+};
+</script>
