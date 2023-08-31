@@ -59,8 +59,8 @@
       <template>
   <v-form>
     <v-container>
-      <v-row>
-        <v-col cols="12">
+      <v-row class="pt-5">
+        <v-col cols="10">
           <v-text-field
             filled
             clear-icon="mdi-close-circle"
@@ -75,13 +75,6 @@
   </v-form>
 </template>
 
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
     </v-app-bar>
 
     <v-main>

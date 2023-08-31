@@ -27,7 +27,10 @@ export default new Vuex.Store({
     },
     categories: state =>{
       return state.categories;
-    }
+    },
+    productById: state => productId => {
+      return state.products.find(product => product.id === productId);
+    },
   },
   mutations: {
     GET_PRODUCTS(state, products) {
@@ -50,7 +53,7 @@ export default new Vuex.Store({
     },
     ADD_PRODUCT(state,newProduct){
       state.products.push(newProduct);
-    }
+    },
   },
   actions: {
     async listProducts({ commit }) {
@@ -103,6 +106,14 @@ export default new Vuex.Store({
       } catch (error) {
         console.error('Error adding product:', error);
         throw error;
+      }
+    },
+    async getProduct({commit},productId) {
+      try{
+        const response = await api.get(`/products/${productId}`);
+        commit('GET_PRODUCTS',[response.data])
+      }catch (error) {
+        console.log(error);
       }
     },
   },
