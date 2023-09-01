@@ -33,14 +33,14 @@ func GenerateUUID(length int) string {
 
 func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, error) {
 	productCreate := model.Product{
-		ID:          GenerateUUID(8),
-		Name:        productDTO.Name,
-		Description: productDTO.Description,
-		BrandID:     productDTO.BrandID,
-		CategoryID:  productDTO.CategoryID,
+		ID:           GenerateUUID(8),
+		Name:         productDTO.Name,
+		Description:  productDTO.Description,
+		BrandID:      productDTO.BrandID,
+		CategoryID:   productDTO.CategoryID,
 		WebsitePrices: []model.WebsitePrice{
-			{WebsiteID: GenerateUUID(8), Price: productDTO.WebsitePrices[0].Price, Stock: productDTO.WebsitePrices[0].Stock},
-			{WebsiteID: GenerateUUID(8), Price: productDTO.WebsitePrices[1].Price, Stock: productDTO.WebsitePrices[1].Stock},
+			{WebsiteID: productDTO.WebsitePrices[0].WebsiteID, Price: productDTO.WebsitePrices[0].Price, Stock: productDTO.WebsitePrices[0].Stock},
+			{WebsiteID: productDTO.WebsitePrices[1].WebsiteID, Price: productDTO.WebsitePrices[1].Price, Stock: productDTO.WebsitePrices[1].Stock},
 		},
 	}
 
