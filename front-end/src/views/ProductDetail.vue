@@ -4,10 +4,10 @@
     <p>Category: {{ getCategoryName(product.categoryId) }}</p>
     <p>{{product.description}} </p>
     <p>Brand: {{ getBrand(product.brandId) }}</p>
-    <h3>Website Prices:</h3>
+    <h3>Different Website Prices:</h3>
     <ul>
       <li v-for="(websitePrice, index) in product.websitePrices" :key="index">
-        Website: {{ getWebsiteName(websitePrice.websiteId) }}
+        Website: <a :href="getWebsiteRelativeUrl(websitePrice.websiteId)" target="_blank">{{ getWebsiteName(websitePrice.websiteId) }}</a>
         Price: {{ websitePrice.price }}
         Stock: {{ websitePrice.stock }}
       </li>
@@ -35,12 +35,15 @@ export default {
       const brand = this.$store.state.brands.find(brand => brand.id === brandId);
       return brand ? brand.name : 'Unknown';
     },
-    getWebsiteName() {
-      return websiteId => {
+    getWebsiteName(websiteId) {
         const website = this.$store.state.websites.find(web => web.id === websiteId);
         return website ? website.url : 'Unknown';
-      };
+     
     },
+    getWebsiteRelativeUrl(websiteId) {
+    const website = this.$store.state.websites.find(web => web.id === websiteId);
+    return website ? '/' + website.url : '#'; 
+  },
     ...mapActions(['listProducts', 'listCategories','listBrands','listWebsites']),
   },
   created() {
