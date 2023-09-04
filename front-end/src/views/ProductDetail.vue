@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <h2>{{ product.name }}</h2>
+    <img :src="'data:image/png;base64,' + product.productImage" alt="Product Image" width="300" height="300" />
     <p>Category: {{ getCategoryName(product.categoryId) }}</p>
     <p>{{product.description}} </p>
     <p>Brand: {{ getBrand(product.brandId) }}</p>

@@ -1,6 +1,7 @@
 <template>
   <div class="product-card elevation-5 ma-6 pa-10">
     <h2 class="mb-8">{{ product.name }}</h2>
+    <img :src="'data:image/png;base64,' + product.productImage" alt="Product Image" width="200" height="200" />
     <p>Category: {{ getCategoryName(product.categoryId) }}</p>
     <p>Brand: {{ getBrand(product.brandId) }}</p>
     <router-link :to="`/product/${product.id}`" >View Product Detail</router-link>

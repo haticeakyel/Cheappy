@@ -1,7 +1,7 @@
 <template>
     <v-container>
       <v-row class="text-center">
-        <v-list flat class="pt-0">
+        <v-list flat class="pt-0"  style="display: contents;">
           <product-item
             v-for="product in products"
             :key="product.id"
