@@ -2,10 +2,11 @@
   <v-app id="inspire">
     <v-navigation-drawer
       v-model="drawer"
+      style="background-color: honeydew;"
       app
     >
       <v-list-item>
-        <v-list-item-content>
+        <v-list-item-content style="color: navy;">
           <v-list-item-title class="title">
             Cheappy App
           </v-list-item-title>
@@ -26,6 +27,7 @@
           :key="item.title"
           :to="item.to"
           link
+          style="border: 2px solid navy;"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>

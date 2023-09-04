@@ -1,10 +1,10 @@
 <template>
-  <div class="product-card elevation-5 ma-6 pa-10">
+  <div class="product-card elevation-5 ma-6 pa-10" style="background-color: white;">
     <h2 class="mb-8">{{ product.name }}</h2>
     <img :src="'data:image/png;base64,' + product.productImage" alt="Product Image" width="200" height="200" />
-    <p>Category: {{ getCategoryName(product.categoryId) }}</p>
-    <p>Brand: {{ getBrand(product.brandId) }}</p>
-    <router-link :to="`/product/${product.id}`" >View Product Detail</router-link>
+    <p>Category: <i>{{ getCategoryName(product.categoryId) }} </i></p>
+    <p>Brand: <strong> {{ getBrand(product.brandId) }} </strong></p>
+    <router-link :to="`/product/${product.id}`" style="background-color: orange; color: white; padding: 5px; border-radius: 5px; text-decoration: none;" text-decoration:none>View Product Detail</router-link>
   
   </div>
 </template>

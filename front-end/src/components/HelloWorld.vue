@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center">
       <v-col>
-      <h1> ALL PRODUCTS </h1>
+      <h1 style="color: navy;"> ALL PRODUCTS </h1>
       <productList/>
 </v-col>
     </v-row>
