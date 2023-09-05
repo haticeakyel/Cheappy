@@ -56,27 +56,6 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
 
-      <v-spacer></v-spacer>
-
-      <template>
-  <v-form>
-    <v-container>
-      <v-row class="pt-5">
-        <v-col cols="10">
-          <v-text-field
-            filled
-            clear-icon="mdi-close-circle"
-            clearable
-            label="Search"
-            type="text"
-            @click:clear="clearMessage"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
-</template>
-
     </v-app-bar>
 
     <v-main>

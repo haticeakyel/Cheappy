@@ -14,21 +14,36 @@
     <p class="pt-2" style="color: grey;"> <i>Category: </i> <strong>{{ getCategoryName(product.categoryId) }} </strong></p>
 
     <h3 style="color: crimson;">Different Website Prices:</h3>
-    <ul>
-      <li v-for="(websitePrice, index) in product.websitePrices" :key="index">
-        website: <strong><a style="text-decoration: none;" :href="getWebsiteRelativeUrl(websitePrice.websiteId)" target="_blank">{{ getWebsiteName(websitePrice.websiteId) }}</a> </strong> 
-        Price:<strong>{{ websitePrice.price }}₺</strong> 
-        Stock: {{ websitePrice.stock }}
-      </li>
-    </ul>
+    <table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Price</th>
+      <th>Stock</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(websitePrice, index) in product.websitePrices" :key="index">
+      <td>
+        <a :href="getWebsiteRelativeUrl(websitePrice.websiteId)" target="_blank" style="text-decoration: none;">
+          <strong>{{ getWebsiteName(websitePrice.websiteId) }}</strong>
+        </a>
+      </td>
+      <td class="pa-6">
+        <strong>{{ websitePrice.price }}₺</strong>
+      </td>
+      <td>{{ websitePrice.stock }}</td>
+    </tr>
+  </tbody>
+</table>
   </div>
   </div>
-
-  <div style="border: 1px solid black; box-sizing: border-box; border-radius: 3px;" class="pa-6" >
-    <h2 class="pa-8" style="color: crimson;">Best Price Lately</h2>
+<div style="display: flex; border: 1px solid black; box-sizing: border-box; border-radius: 3px;" class="pa-6">
+  <div class="pa-8" >
+    <h2  style="color: crimson;">Best Price Lately</h2>
     
 
-    <p>
+    <p class="pt-6">
       <i>  Website With Best Price:</i> <strong><a>{{ bestPriceWebsite.name }}</a></strong>
       </p>
   <p>
@@ -38,6 +53,20 @@
     Stock:  {{ bestPriceWebsite.stock }}
   </p>
   </div>
+
+  <div class="ml-10">
+    <h2 class="pa-8" style="color: crimson;">Average Price</h2>
+    
+
+    <p>
+      </p>
+  <p class="ma-16">
+        <strong> {{ averagePrice }}₺</strong> 
+  </p>
+  <p>
+  </p>
+  </div>
+</div>
 
   </v-container>
 </template>
@@ -69,6 +98,17 @@ export default {
         return bestPriceWebsite;
       }
       return null; 
+    },
+    averagePrice() {
+      if (this.product && this.product.websitePrices.length > 0) {
+        const totalPrices = this.product.websitePrices.reduce(
+          (total, price) => total + price.price,
+          0
+        );
+        const numberOfPrices = this.product.websitePrices.length;
+        return (totalPrices / numberOfPrices).toFixed(2); // Return the average price with 2 decimal places
+      }
+      return 'N/A'; // Return "N/A" if there are no prices
     },
   },
   methods: {
