@@ -12,8 +12,25 @@
       </div>
     <p style="color: darkcyan;"><strong> {{ getBrand(product.brandId) }}</strong></p>
     <p class="pt-2" style="color: grey;"> <i>Category: </i> <strong>{{ getCategoryName(product.categoryId) }} </strong></p>
+    <h2  style="color: crimson;">Best Price Lately</h2>
+    
 
-    <h3 style="color: crimson;">Different Website Prices:</h3>
+    <p class="pt-6">
+      <i>  Website With Best Price:</i> <strong><a>{{ bestPriceWebsite.name }}</a></strong>
+      </p>
+  <p>
+        Price:<strong> {{ bestPriceWebsite.price }}₺</strong> 
+  </p>
+  <p>
+    Stock:  {{ bestPriceWebsite.stock }}
+  </p>
+  <img src="../assets/fast.jpg" height="100px">
+
+  </div>
+  </div>
+<div style="display: flex; border: 1px solid black; box-sizing: border-box; border-radius: 3px;" class="pa-3">
+  <div class="pa-8" >
+    <h2 style="color: crimson;">Different Website Prices:</h2>
     <table>
   <thead>
     <tr>
@@ -36,22 +53,6 @@
     </tr>
   </tbody>
 </table>
-  </div>
-  </div>
-<div style="display: flex; border: 1px solid black; box-sizing: border-box; border-radius: 3px;" class="pa-6">
-  <div class="pa-8" >
-    <h2  style="color: crimson;">Best Price Lately</h2>
-    
-
-    <p class="pt-6">
-      <i>  Website With Best Price:</i> <strong><a>{{ bestPriceWebsite.name }}</a></strong>
-      </p>
-  <p>
-        Price:<strong> {{ bestPriceWebsite.price }}₺</strong> 
-  </p>
-  <p>
-    Stock:  {{ bestPriceWebsite.stock }}
-  </p>
   </div>
 
   <div class="ml-10">
