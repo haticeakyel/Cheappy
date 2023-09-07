@@ -180,3 +180,25 @@ func (s *Service) GetCategory(ID string) (*model.Category, error) {
 
 	return gotCategory, nil
 }
+
+func (s *Service) DeleteProduct(ID string) error {
+
+	err := s.Repository.DeleteProduct(ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *Service) DeleteBrand(ID string) error {
+
+	err := s.Repository.DeleteBrand(ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

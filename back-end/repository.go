@@ -249,3 +249,31 @@ func (repository *Repository) GetCategory(ID string) (*model.Category, error) {
 
 	return entity, nil
 }
+
+func (repository *Repository) DeleteProduct(ID string) error {
+	collection := repository.client.Database("product").Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	deleteProduct := collection.FindOneAndDelete(ctx, bson.M{"id":ID})
+
+	if deleteProduct!= nil {
+		return deleteProduct.Err()
+	}
+
+	return  nil
+}
+
+func (repository *Repository) DeleteBrand(ID string) error {
+	collection := repository.client.Database("product").Collection("brands")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	deleteBrand := collection.FindOneAndDelete(ctx, bson.M{"id":ID})
+
+	if deleteBrand!= nil {
+		return deleteBrand.Err()
+	}
+
+	return  nil
+}

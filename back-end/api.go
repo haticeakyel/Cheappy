@@ -219,3 +219,34 @@ func (a *Api) HandleGetCategory(c *fiber.Ctx) error {
 
 	return nil
 }
+
+func (a *Api) HandleDeleteProduct(c *fiber.Ctx) error {
+	ID := c.Params("id")
+
+	err := a.Service.DeleteProduct(ID)
+
+	switch err {
+	case nil:
+		c.Status(fiber.StatusNoContent)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return nil
+}
+
+
+func (a *Api) HandleDeleteBrand(c *fiber.Ctx) error {
+	ID := c.Params("id")
+
+	err := a.Service.DeleteBrand(ID)
+
+	switch err {
+	case nil:
+		c.Status(fiber.StatusNoContent)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return nil
+}
