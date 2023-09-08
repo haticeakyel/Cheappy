@@ -235,7 +235,6 @@ func (a *Api) HandleDeleteProduct(c *fiber.Ctx) error {
 	return nil
 }
 
-
 func (a *Api) HandleDeleteBrand(c *fiber.Ctx) error {
 	ID := c.Params("id")
 
@@ -244,6 +243,30 @@ func (a *Api) HandleDeleteBrand(c *fiber.Ctx) error {
 	switch err {
 	case nil:
 		c.Status(fiber.StatusNoContent)
+	default:
+		c.Status(fiber.StatusInternalServerError)
+	}
+
+	return nil
+}
+
+func (a *Api) HandleEditProduct(c *fiber.Ctx) error {
+	ID := c.Params("id")
+
+	product := model.ProductDTO{}
+	err := c.BodyParser(&product)
+
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return err
+	}
+
+	editProduct, err := a.Service.UpdateProduct(product, ID)
+
+	switch err {
+	case nil:
+		c.JSON(editProduct)
+		c.Status(fiber.StatusOK)
 	default:
 		c.Status(fiber.StatusInternalServerError)
 	}

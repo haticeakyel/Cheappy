@@ -202,3 +202,25 @@ func (s *Service) DeleteBrand(ID string) error {
 
 	return nil
 }
+
+func (s *Service) UpdateProduct(productDTO model.ProductDTO, ID string) (model.Product, error) {
+
+	/* product, err := s.Repository.GetProduct(ID)
+	if err != nil {
+		return nil, err
+	} */
+/* 
+	product.Name = productDTO.Name
+	product.Description = productDTO.Description
+	product.BrandID = productDTO.BrandID
+	product.CategoryID = productDTO.CategoryID
+	product.ProductImage = productDTO.ProductImage
+	product.WebsitePrices = productDTO.WebsitePrices 
+ */
+	updatedProduct, err := s.Repository.EditProduct(productDTO, ID)
+	if err != nil {
+		return model.Product{}, nil
+	}
+
+	return updatedProduct, nil
+}

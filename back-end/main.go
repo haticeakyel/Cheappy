@@ -31,13 +31,14 @@ func SetupApp(api *Api) *fiber.App {
 	app.Post("/addProduct", api.HandleAddProduct)
 	app.Get("/products", api.HandleGetProducts)
 	app.Get("/products/:id", api.HandleGetProduct)
-	app.Delete("/products/:id",api.HandleDeleteProduct)
+	app.Delete("/products/:id", api.HandleDeleteProduct)
+	app.Put("/products/:id", api.HandleEditProduct)
 
 	//brands
 	app.Post("/addBrand", api.HandleAddBrand)
 	app.Get("/brands", api.HandleGetBrands)
 	app.Get("/brands/:id", api.HandleGetBrand)
-	app.Delete("/brands/:id",api.HandleDeleteBrand)
+	app.Delete("/brands/:id", api.HandleDeleteBrand)
 
 	//websites
 	app.Post("/addWebsite", api.HandleAddWebsite)

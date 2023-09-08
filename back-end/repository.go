@@ -255,13 +255,13 @@ func (repository *Repository) DeleteProduct(ID string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	deleteProduct := collection.FindOneAndDelete(ctx, bson.M{"id":ID})
+	deleteProduct := collection.FindOneAndDelete(ctx, bson.M{"id": ID})
 
-	if deleteProduct!= nil {
+	if deleteProduct != nil {
 		return deleteProduct.Err()
 	}
 
-	return  nil
+	return nil
 }
 
 func (repository *Repository) DeleteBrand(ID string) error {
@@ -269,11 +269,54 @@ func (repository *Repository) DeleteBrand(ID string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	deleteBrand := collection.FindOneAndDelete(ctx, bson.M{"id":ID})
+	deleteBrand := collection.FindOneAndDelete(ctx, bson.M{"id": ID})
 
-	if deleteBrand!= nil {
+	if deleteBrand != nil {
 		return deleteBrand.Err()
 	}
 
-	return  nil
+	return nil
+}
+
+func (repository *Repository) EditProduct(productDTO model.ProductDTO, ID string) (model.Product, error) {
+	collection := repository.client.Database("product").Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	updateProduct := bson.M{
+		"id":            ID,
+		"name":          productDTO.Name,
+		"description":   productDTO.Description,
+		"brandId":       productDTO.BrandID,
+		"categoryId":    productDTO.CategoryID,
+		"productImage":  productDTO.ProductImage,
+		"websitePrices": productDTO.WebsitePrices,
+	}
+
+	_, err := collection.ReplaceOne(ctx, bson.M{"id": ID}, updateProduct)
+
+	if err != nil {
+		return model.Product{}, err
+	}
+
+	updatedProduct, err := repository.GetProduct(ID)
+
+	if err != nil {
+		return model.Product{}, err
+	}
+
+	return *updatedProduct, nil
+	/* 	filter := bson.M{"id": product.ID}
+
+	   	result := collection.FindOneAndReplace(ctx, filter, product)
+	   	if result.Err() != nil {
+	   		return nil, result.Err()
+	   	}
+
+	   	updatedProduct, err := repository.GetProduct(product.ID)
+	   	if err != nil {
+	   		return nil, err
+	   	}
+
+	   	return updatedProduct, nil */
 }
