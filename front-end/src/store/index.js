@@ -14,6 +14,10 @@ export default new Vuex.Store({
     brands: [],
     websites: [],
     categories:[],
+    snackbar:{
+      show: false,
+      text:''
+    }
   },
   getters: {
     products: state => {
@@ -53,6 +57,9 @@ export default new Vuex.Store({
     },
     ADD_PRODUCT(state,newProduct){
       state.products.push(newProduct);
+    },
+    DELETE_PRODUCT(state,productId){
+      state.products = state.products.filter(product => product.id !== productId)
     },
   },
   actions: {
@@ -115,6 +122,15 @@ export default new Vuex.Store({
       }catch (error) {
         console.log(error);
       }
+    },
+    async deleteProduct({commit},productId){
+      try{
+        const response = await api.delete(`/products/${productId}`);
+        commit('DELETE_PRODUCT', response.data)
+      }catch (error) {
+        console.log(error);
+      }
+
     },
   },
 
