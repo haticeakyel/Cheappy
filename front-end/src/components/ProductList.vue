@@ -45,6 +45,14 @@ export default {
   methods: {
     ...mapActions(['listProducts']),
   },
+  watch: {
+    products: {
+      handler(newProducts, oldProducts) {
+        this.listProducts(newProducts);
+      },
+      deep: true,
+    },
+  },
   created() {
     this.listProducts();
   },
