@@ -32,18 +32,25 @@ func GenerateUUID(length int) string {
 }
 
 func (s *Service) CreateProduct(productDTO model.ProductDTO) (*model.Product, error) {
+	var websitePrices []model.WebsitePrice
+
+	for _, wp := range productDTO.WebsitePrices {
+		websitePrice := model.WebsitePrice{
+			WebsiteID: wp.WebsiteID,
+			Price:     wp.Price,
+			Stock:     wp.Stock,
+		}
+		websitePrices = append(websitePrices, websitePrice)
+	}
 
 	productCreate := model.Product{
-		ID:           GenerateUUID(8),
-		Name:         productDTO.Name,
-		Description:  productDTO.Description,
-		BrandID:      productDTO.BrandID,
-		CategoryID:   productDTO.CategoryID,
-		ProductImage: productDTO.ProductImage,
-		WebsitePrices: []model.WebsitePrice{
-			{WebsiteID: productDTO.WebsitePrices[0].WebsiteID, Price: productDTO.WebsitePrices[0].Price, Stock: productDTO.WebsitePrices[0].Stock},
-			{WebsiteID: productDTO.WebsitePrices[1].WebsiteID, Price: productDTO.WebsitePrices[1].Price, Stock: productDTO.WebsitePrices[1].Stock},
-		},
+		ID:            GenerateUUID(8),
+		Name:          productDTO.Name,
+		Description:   productDTO.Description,
+		BrandID:       productDTO.BrandID,
+		CategoryID:    productDTO.CategoryID,
+		ProductImage:  productDTO.ProductImage,
+		WebsitePrices: websitePrices,
 	}
 
 	productCreated, err := s.Repository.CreateProduct(productCreate)
@@ -209,14 +216,14 @@ func (s *Service) UpdateProduct(productDTO model.ProductDTO, ID string) (model.P
 	if err != nil {
 		return nil, err
 	} */
-/* 
-	product.Name = productDTO.Name
-	product.Description = productDTO.Description
-	product.BrandID = productDTO.BrandID
-	product.CategoryID = productDTO.CategoryID
-	product.ProductImage = productDTO.ProductImage
-	product.WebsitePrices = productDTO.WebsitePrices 
- */
+	/*
+		product.Name = productDTO.Name
+		product.Description = productDTO.Description
+		product.BrandID = productDTO.BrandID
+		product.CategoryID = productDTO.CategoryID
+		product.ProductImage = productDTO.ProductImage
+		product.WebsitePrices = productDTO.WebsitePrices
+	*/
 	updatedProduct, err := s.Repository.EditProduct(productDTO, ID)
 	if err != nil {
 		return model.Product{}, nil

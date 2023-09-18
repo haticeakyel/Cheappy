@@ -31,6 +31,7 @@
         v-model="select"
         :items="brands"
         item-text="name"
+        item-value="brand.id"
         label="Brand"
         required
         @change="$v.select.$touch()"
@@ -96,7 +97,6 @@ export default {
     name: { required},
     select:{required},
     selectedCategoryId: { required },
-    selectW: { required },
   },
 
   data () {
@@ -144,8 +144,12 @@ export default {
       try {
         const productData = { 
           name: this.name,
+          description: this.description,
           categoryId: this.selectedCategoryId, 
+          brandId: this.select,
+
         };
+        this.productAdded = true;
         await this.$store.dispatch('addProduct', productData);
         this.productAdded = true; 
         setTimeout(() => {
@@ -155,33 +159,37 @@ export default {
         console.error('Error adding product:', error);
       }
     },
+    async submit() {
+  this.$v.$touch();
 
-    submit() {
-      this.$v.$touch()
-      if (!this.$v.$invalid) {
-        this.addNewProduct();
-        this.name = '';
-        this.price = 0;
-        this.stock = 0;
-        this.description = '';
-        this.select = null;
-        this.selectC = null;
-        this.selectW = null;
-      }
-      else {
-        console.log('olmadı :()')
-      }
-    },
-    clear() {
-      this.$v.$reset()
-      this.name = ''
-      this.price = 0
-      this.stock = 0
-      this.description = ''
-      this.select = null 
-      this.selectC = null
-      this.selectW = null
-    },
+  if (!this.$v.$invalid) {
+    try {
+      await this.addNewProduct();
+      this.name = '';
+      this.price = 0;
+      this.stock = 0;
+      this.description = '';
+      this.select = null;
+      this.selectedCategoryId = null;
+      this.selectW = null;
+    } catch (error) {
+      console.error('Error adding product:', error);
+    }
+  } else {
+    console.log('Validation errors exist');
+  }
+},
+clear() {
+  this.$v.$reset();
+  this.name = '';
+  this.price = 0;
+  this.stock = 0;
+  this.description = '';
+  this.select = null; // Corrected from this.selectC
+  this.selectedCategoryId = null;
+  this.selectW = null;
+},
+
   },
 }
 </script>

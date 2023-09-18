@@ -1,74 +1,86 @@
 <template>
   <v-container>
     <div style="display: flex;">
-    <div class="pt-5">
-    
-    <img :src="'data:image/png;base64,' + product.productImage" alt="Product Image" style="max-height: 500px; border-radius: 2px; border: 1px solid grey;" />
-    </div>
-    <div class="pa-16">
-      <div>
-      <h2>{{ product.name }}</h2>
-      <p style="font-size: larger; color: grey;"> <i>{{product.description}}  </i></p>
+      <div class="pt-5">
+        <img
+          v-if="product.productImage"
+          :src="'data:image/png;base64,' + product.productImage"
+          alt="Product Image"
+          style="max-height: 500px; border-radius: 2px; border: 1px solid grey;"
+        />
+        <div v-else class="pt-16 mt-16" >
+          <p>No product image available.</p>
+        </div>
       </div>
-    <p style="color: darkcyan;"><strong> {{ getBrand(product.brandId) }}</strong></p>
-    <p class="pt-2" style="color: grey;"> <i>Category: </i> <strong>{{ getCategoryName(product.categoryId) }} </strong></p>
-    <h2  style="color: crimson;">Best Price Lately</h2>
-    
+      <div class="pa-16">
+        <div>
+          <h2>{{ product.name }}</h2>
+          <p style="font-size: larger; color: grey;"> <i>{{ product.description }}  </i></p>
+        </div>
+        <p style="color: darkcyan;"><strong> {{ getBrand(product.brandId) }}</strong></p>
+        <p class="pt-2" style="color: grey;"> <i>Category: </i> <strong>{{ getCategoryName(product.categoryId) }} </strong></p>
+        <h2 style="color: crimson;">Best Price Lately</h2>
+        <div v-if="bestPriceWebsite && bestPriceWebsite.name && bestPriceWebsite.price !== null && bestPriceWebsite.stock !== null">
+          <p class="pt-6">
+            <i>Website With Best Price:</i> <strong><a>{{ bestPriceWebsite.name }}</a></strong>
+          </p>
+          <p v-if="bestPriceWebsite.price !== null">
+            Price:<strong> {{ bestPriceWebsite.price }}₺</strong> 
+          </p>
+          <p v-if="bestPriceWebsite.stock !== null">
+            Stock:  {{ bestPriceWebsite.stock }}
+          </p>
+          <img src="../assets/fast.jpg" height="100px">
+        </div>
+        <div v-else>
+          <p>No best price data available.</p>
+        </div>
 
-    <p class="pt-6">
-      <i>  Website With Best Price:</i> <strong><a>{{ bestPriceWebsite.name }}</a></strong>
-      </p>
-  <p>
-        Price:<strong> {{ bestPriceWebsite.price }}₺</strong> 
-  </p>
-  <p>
-    Stock:  {{ bestPriceWebsite.stock }}
-  </p>
-  <img src="../assets/fast.jpg" height="100px">
-
-  </div>
-  </div>
-<div style="display: flex; border: 1px solid black; box-sizing: border-box; border-radius: 3px;" class="pa-3">
-  <div class="pa-8" >
-    <h2 style="color: crimson;">Different Website Prices:</h2>
-    <table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Price</th>
-      <th>Stock</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="(websitePrice, index) in product.websitePrices" :key="index">
-      <td>
-        <a :href="getWebsiteRelativeUrl(websitePrice.websiteId)" target="_blank" style="text-decoration: none;">
-          <strong>{{ getWebsiteName(websitePrice.websiteId) }}</strong>
-        </a>
-      </td>
-      <td class="pa-6">
-        <strong>{{ websitePrice.price }}₺</strong>
-      </td>
-      <td>{{ websitePrice.stock }}</td>
-    </tr>
-  </tbody>
-</table>
-  </div>
-
-  <div class="ml-10">
-    <h2 class="pa-8" style="color: crimson;">Average Price</h2>
-    
-
-    <p>
-      </p>
-  <p class="ma-16">
-        <strong> {{ averagePrice }}₺</strong> 
-  </p>
-  <p>
-  </p>
-  </div>
-</div>
-
+      </div>
+    </div>
+    <div style="display: flex; border: 1px solid black; box-sizing: border-box; border-radius: 3px;" class="pa-3">
+      <div class="pa-8" >
+        <h2 style="color: crimson;">Different Website Prices:</h2>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Price</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-if="product.websitePrices && product.websitePrices.length > 0">
+              <tr v-for="(websitePrice, index) in product.websitePrices" :key="index">
+                <td>
+                  <a :href="getWebsiteRelativeUrl(websitePrice.websiteId)" target="_blank" style="text-decoration: none;">
+                    <strong>{{ getWebsiteName(websitePrice.websiteId) }}</strong>
+                  </a>
+                </td>
+                <td class="pa-6">
+                  <strong>{{ websitePrice.price }}₺</strong>
+                </td>
+                <td>{{ websitePrice.stock }}</td>
+              </tr>
+            </template>
+            <template v-else>
+              <tr>
+                <td colspan="3">No website prices available.</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <div class="ml-10">
+        <h2 class="pa-8" style="color: crimson;">Average Price</h2>
+        <p v-if="product.websitePrices && product.websitePrices.length > 0" class="ma-16">
+          <strong> {{ averagePrice }}₺</strong> 
+        </p>
+        <p v-else>
+          No average price available.
+        </p>
+      </div>
+    </div>
   </v-container>
 </template>
 
@@ -83,7 +95,7 @@ export default {
       );
     },
     bestPriceWebsite() {
-      if (this.product && this.product.websitePrices.length > 0) {
+      if (this.product && this.product.websitePrices && this.product.websitePrices.length > 0) {
         const minPrice = Math.min(
           ...this.product.websitePrices.map(price => price.price)
         );
@@ -101,7 +113,7 @@ export default {
       return null; 
     },
     averagePrice() {
-      if (this.product && this.product.websitePrices.length > 0) {
+      if (this.product && this.product.websitePrices && this.product.websitePrices.length > 0) {
         const totalPrices = this.product.websitePrices.reduce(
           (total, price) => total + price.price,
           0
@@ -122,14 +134,13 @@ export default {
       return brand ? brand.name : 'Unknown';
     },
     getWebsiteName(websiteId) {
-        const website = this.$store.state.websites.find(web => web.id === websiteId);
-        return website ? website.url : 'Unknown';
-     
+      const website = this.$store.state.websites.find(web => web.id === websiteId);
+      return website ? website.url : 'Unknown';
     },
     getWebsiteRelativeUrl(websiteId) {
-    const website = this.$store.state.websites.find(web => web.id === websiteId);
-    return website ? '/' + website.url : '#'; 
-  },
+      const website = this.$store.state.websites.find(web => web.id === websiteId);
+      return website ? '/' + website.url : '#'; 
+    },
     ...mapActions(['listProducts', 'listCategories','listBrands','listWebsites']),
   },
   created() {
